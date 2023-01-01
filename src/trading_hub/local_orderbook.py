@@ -3,7 +3,7 @@ import websocket
 import json
 from src.helpers.utils import *
 
-SNAPSHOT_URL = "https://api.binance.com/api/v3/depth?symbol=BNBBTC&limit="
+SNAPSHOT_URL = "https://api.binance.com/api/v3/depth?symbol="
 SOCKET = "wss://stream.binance.com:443/ws/"
 
 LOGGER = logging.getLogger(__name__)
@@ -36,7 +36,7 @@ class LocalOrderBook:
         which are later updated separately
         """
         if not self.snapshot:
-            self.snapshot = get_snapshot(SNAPSHOT_URL+self._snapshot_limit)
+            self.snapshot = get_snapshot(SNAPSHOT_URL+self._symbol.upper()+"&limit="+self._snapshot_limit)
             self.bids, self.asks = preprocess_snapshot(self.snapshot)
 
     def set_up(self, new_update_massage):
