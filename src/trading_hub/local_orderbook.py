@@ -115,22 +115,32 @@ class LocalOrderBook:
         """
         print(f"Connection closed")
 
+    def on_error(self, ws, error):
+        """
+        The on_close method handles errors
+        :param ws: The stream
+        :param error: Raised error
+        """
+        raise error
+
     def main(self):
         """
         The main method triggers the whole workflow
         """
         ws = websocket.WebSocketApp(SOCKET + self._symbol + "@depth",
                                     on_message=self.on_message,
-                                    on_close=self.on_close)
+                                    on_close=self.on_close,
+                                    on_error=self.on_error)
         ws.run_forever()
 
 
 if __name__ == '__main__':
 
-    try:
-        Client = LocalOrderBook(symbol="bnbbtc", snapshot_limit='2')
-        Client.main()
-    except Exception as e:
-        LOGGER.warning(f"Connection was interrupted due"
-                       f"the following error: {e}."
-                       f"Reconnecting again...")
+    while True:
+        try:
+            Client = LocalOrderBook(symbol="bnbbtc", snapshot_limit='2')
+            Client.main()
+        except Exception as e:
+            LOGGER.warning(f"Connection was interrupted due "
+                           f"the following error: {e}. "
+                           f"Reconnecting again...")

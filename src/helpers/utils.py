@@ -14,7 +14,7 @@ def update_bids(bids, json_message):
             bids[i[0]] = i[1]
             if i[1] == '0.00000000':
                 del bids[i[0]]
-    return dict(reversed(sorted(bids.items())))
+    return dict(sorted(bids.items(), reverse=True))
 
 
 def update_asks(asks, json_message):
